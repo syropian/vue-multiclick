@@ -1,6 +1,5 @@
 import { shallowMount } from "@vue/test-utils"
 import VueMulticlick from "../src"
-// import cloneDeep from "lodash.clonedeep"
 
 describe("VueMulticlick", () => {
   let sampleItems = [
