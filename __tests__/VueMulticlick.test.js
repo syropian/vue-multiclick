@@ -39,10 +39,22 @@ describe("VueMulticlick", () => {
     expect(wrapper.vm.selectedItems).toEqual([sampleItems[4]])
   })
 
-  describe("Selecting multiple items", () => {
-    it("selects from index 0 to the chosen item when no items are selected", () => {
-      wrapper.vm.setSelectedItems(sampleItems[4])
+  it("can select multiple items", () => {
+    const itemsToSelect = [sampleItems[0], sampleItems[2], sampleItems[4]]
+    wrapper.vm.setSelectedItems(itemsToSelect)
 
+    expect(wrapper.vm.selectedItems).toEqual(itemsToSelect)
+  })
+
+  it("can select a range of items", () => {
+    expect(wrapper.vm.getItemsFromRange(0, 3)).toEqual([sampleItems[0], sampleItems[1], sampleItems[2], sampleItems[3]])
+
+    expect(wrapper.vm.getItemsFromRange(5, 2)).toEqual([sampleItems[2], sampleItems[3], sampleItems[4], sampleItems[5]])
+  })
+
+  describe("Setting the selected items based off the last selected item", () => {
+    it("selects from index 0 to the chosen item when no items are selected", () => {
+      let items = wrapper.vm.setSelectedItemsFromLastSelected(sampleItems[4])
       expect(wrapper.vm.selectedItems).toEqual([
         sampleItems[0],
         sampleItems[1],
@@ -51,19 +63,18 @@ describe("VueMulticlick", () => {
         sampleItems[4]
       ])
     })
-
     it("selects from the last selected item to the newly selected item", () => {
       wrapper.setData({
         selectedItems: [sampleItems[2], sampleItems[4]],
         lastSelected: sampleItems[2]
       })
 
-      wrapper.vm.setSelectedItems(sampleItems[6])
+      wrapper.vm.setSelectedItemsFromLastSelected(sampleItems[6])
 
       expect(wrapper.vm.selectedItems).toEqual([
         sampleItems[2],
-        sampleItems[4],
         sampleItems[3],
+        sampleItems[4],
         sampleItems[5],
         sampleItems[6]
       ])
@@ -71,9 +82,9 @@ describe("VueMulticlick", () => {
       wrapper.vm.selectedItems = [sampleItems[5]]
       wrapper.vm.lastSelected = sampleItems[5]
 
-      wrapper.vm.setSelectedItems(sampleItems[2])
+      wrapper.vm.setSelectedItemsFromLastSelected(sampleItems[2])
 
-      expect(wrapper.vm.selectedItems).toEqual([sampleItems[5], sampleItems[2], sampleItems[3], sampleItems[4]])
+      expect(wrapper.vm.selectedItems).toEqual([sampleItems[2], sampleItems[3], sampleItems[4], sampleItems[5]])
     })
   })
 
@@ -91,7 +102,7 @@ describe("VueMulticlick", () => {
     expect(wrapper.vm.selectedItems).toEqual([sampleItems[0], sampleItems[2]])
   })
 
-  it("removes items from the selection", () => {
+  it("remove a selected item from the selection", () => {
     wrapper.setData({
       selectedItems: [sampleItems[0], sampleItems[1]]
     })
@@ -106,7 +117,7 @@ describe("VueMulticlick", () => {
       selectedItems: [sampleItems[3], sampleItems[4]]
     })
 
-    const index = wrapper.vm.getSelectedItemIndex(sampleItems[4])
+    const index = wrapper.vm.getItemIndex(sampleItems[4])
 
     expect(index).toBe(4)
   })
@@ -119,8 +130,8 @@ describe("VueMulticlick", () => {
     const dupe = sampleItems[4]
     const notDupe = sampleItems[5]
 
-    expect(wrapper.vm.itemIsDuplicate(dupe)).toBeTruthy()
-    expect(wrapper.vm.itemIsDuplicate(notDupe)).toBeFalsy()
+    expect(wrapper.vm.itemSelected(dupe)).toBeTruthy()
+    expect(wrapper.vm.itemSelected(notDupe)).toBeFalsy()
   })
 
   it("can select all items", () => {
@@ -138,7 +149,7 @@ describe("VueMulticlick", () => {
       selectedItems: [sampleItems[1], sampleItems[4], sampleItems[6]]
     })
 
-    wrapper.vm.deselectAll()
+    wrapper.vm.selectNone()
 
     expect(wrapper.vm.selectedItems).toEqual([])
   })
@@ -198,11 +209,11 @@ describe("VueMulticlick", () => {
 
     it("sets the selection range when the shift key is held", () => {
       const $event = { shiftKey: true }
-      const selectItemsSpy = jest.spyOn(wrapper.vm, "setSelectedItems")
+      const lastSelectedBySpy = jest.spyOn(wrapper.vm, "setSelectedItemsFromLastSelected")
 
       wrapper.vm.itemClicked(sampleItems[5], $event)
 
-      expect(selectItemsSpy).toHaveBeenCalledWith(sampleItems[5])
+      expect(lastSelectedBySpy).toHaveBeenCalledWith(sampleItems[5])
     })
 
     it("sets the last selected item to the item clicked", () => {

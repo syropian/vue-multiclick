@@ -21,19 +21,23 @@ const VueMulticlick = {
       return this.selectedItems.map(item => this.items.indexOf(item))
     },
     lastSelectedIndex() {
-      return this.getSelectedItemIndex(this.lastSelected)
+      if (!this.lastSelected) {
+        return -1
+      } else {
+        return this.getItemIndex(this.lastSelected)
+      }
     }
   },
   methods: {
     itemClicked(item, $event = {}) {
       if (($event.metaKey || $event.ctrlKey) && !$event.shiftKey) {
-        if (this.itemIsDuplicate(item)) {
+        if (this.itemSelected(item)) {
           this.removeFromSelection(item)
         } else {
           this.appendToSelection(item)
         }
       } else if ($event.shiftKey) {
-        this.setSelectedItems(item)
+        this.setSelectedItemsFromLastSelected(item)
       } else {
         this.setSelectedItem(item)
       }
@@ -42,24 +46,29 @@ const VueMulticlick = {
     setSelectedItem(item) {
       this.selectedItems = [item]
     },
-    setSelectedItems(item) {
-      const itemIndex = this.getSelectedItemIndex(item)
+    setSelectedItems(items) {
+      this.selectedItems = items
+    },
+    setSelectedItemsFromLastSelected(item) {
+      const itemIndex = this.getItemIndex(item)
+      let itemsToSelect = []
 
       if (!this.selectedItems.length) {
-        for (let i = 0; i <= itemIndex; i++) {
-          this.appendToSelection(this.items[i])
-        }
+        itemsToSelect = this.getItemsFromRange(0, itemIndex)
       } else {
-        if (itemIndex >= this.lastSelectedIndex) {
-          for (let i = this.lastSelectedIndex; i <= itemIndex; i++) {
-            this.appendToSelection(this.items[i])
-          }
-        } else {
-          for (let i = itemIndex; i <= this.lastSelectedIndex; i++) {
-            this.appendToSelection(this.items[i])
-          }
-        }
+        itemsToSelect = this.getItemsFromRange(this.lastSelectedIndex, itemIndex)
       }
+      this.setSelectedItems(itemsToSelect)
+    },
+    getItemsFromRange(start = 0, end = 0) {
+      const items = []
+      const low = Math.min(start, end)
+      const high = Math.max(start, end)
+      for (let i = low; i <= high; i++) {
+        items.push(this.items[i])
+      }
+
+      return items
     },
     appendToSelection(item) {
       this.selectedItems = [...new Set(this.selectedItems.concat([item]))]
@@ -67,26 +76,38 @@ const VueMulticlick = {
     removeFromSelection(item) {
       this.selectedItems = this.selectedItems.filter(i => i[this.uid] !== item[this.uid])
     },
-    getSelectedItemIndex(item) {
+    getItemIndex(item) {
       return this.items.findIndex(i => {
         return i[this.uid] === item[this.uid]
       })
     },
-    itemIsDuplicate(item) {
+    itemSelected(item) {
       return this.selectedItems.map(i => i[this.uid]).includes(item[this.uid])
     },
     selectAll() {
       this.selectedItems = this.items
     },
-    deselectAll() {
+    selectNone() {
       this.selectedItems = []
     }
   },
   render() {
     return this.$scopedSlots.default({
       selectedItems: this.selectedItems,
+      lastSelectedItem: this.lastSelected,
       selectedIndexes: this.selectedIndexes,
-      itemClicked: this.itemClicked
+      lastSelectedIndex: this.lastSelectedIndex,
+      itemClicked: this.itemClicked,
+      setSelectedItem: this.setSelectedItem,
+      setSelectedItems: this.setSelectedItems,
+      setSelectedItemsFromLastSelected: this.setSelectedItemsFromLastSelected,
+      appendToSelection: this.appendToSelection,
+      removeFromSelection: this.removeFromSelection,
+      getItemIndex: this.getItemIndex,
+      getItemsFromRange: this.getItemsFromRange,
+      itemSelected: this.itemSelected,
+      selectAll: this.selectAll,
+      selectNone: this.selectNone
     })
   }
 }
