@@ -1,6 +1,6 @@
 {
   "name": "vue-multiclick",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A renderless Vue component for managing list item selection state",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
