@@ -13,7 +13,7 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "example": "poi --serve",
-    "example:build": "rm -rf example/dist && poi build",
+    "example:build": "rm -rf example/dist && poi --prod",
     "example:deploy": "npm run example:build && gh-pages -d example/dist",
     "version": "npm run example:deploy"
   },
