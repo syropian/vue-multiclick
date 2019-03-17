@@ -64,6 +64,7 @@ li {
   cursor: pointer;
   border-bottom: 1px solid #ececec;
   padding: 8px 16px;
+  user-select: none;
 }
 
 li:nth-child(odd) {
