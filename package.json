@@ -1,0 +1,59 @@
+{
+  "name": "vue-multiclick",
+  "version": "0.0.0",
+  "description": "A renderless Vue component for managing list item selection state",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "unpkg": "dist/index.umd.min.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "bili",
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "example": "poi --serve",
+    "example:build": "rm -rf example/dist && poi build",
+    "example:deploy": "npm run example:build && gh-pages -d example/dist",
+    "version": "npm run example:deploy"
+  },
+  "keywords": [
+    "vue",
+    "selection",
+    "state",
+    "click"
+  ],
+  "author": "Collin Henderson <collin@syropia.net>",
+  "license": "MIT",
+  "repository": "https://github.com/syropian/vue-multiclick",
+  "bili": {
+    "output": {
+      "format": [
+        "cjs",
+        "umd",
+        "umd-min",
+        "es"
+      ],
+      "moduleName": "VueMulticlick"
+    }
+  },
+  "poi": {
+    "entry": "example/index.js",
+    "output": {
+      "dir": "example/dist",
+      "publicUrl": "/vue-multiclick/"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@vue/test-utils": "^1.0.0-beta.29",
+    "babel-jest": "^24.1.0",
+    "bili": "^4.5.2",
+    "gh-pages": "^2.0.1",
+    "jest": "^24.1.0",
+    "poi": "^12.5.5",
+    "vue": "^2.6.8",
+    "vue-template-compiler": "^2.6.8"
+  }
+}
