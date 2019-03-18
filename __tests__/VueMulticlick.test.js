@@ -89,7 +89,7 @@ describe("VueMulticlick", () => {
       wrapper.vm.lastSelected = sampleItems[4]
 
       wrapper.vm.setSelectedItemsFromLastSelected(sampleItems[6])
-      expect(wrapper.vm.sexlectedItems).toEqual([sampleItems[2], sampleItems[4], sampleItems[5], sampleItems[6]])
+      expect(wrapper.vm.selectedItems).toEqual([sampleItems[2], sampleItems[4], sampleItems[5], sampleItems[6]])
     })
   })
 
