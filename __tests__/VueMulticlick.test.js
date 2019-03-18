@@ -73,8 +73,8 @@ describe("VueMulticlick", () => {
 
       expect(wrapper.vm.selectedItems).toEqual([
         sampleItems[2],
-        sampleItems[3],
         sampleItems[4],
+        sampleItems[3],
         sampleItems[5],
         sampleItems[6]
       ])
@@ -83,8 +83,13 @@ describe("VueMulticlick", () => {
       wrapper.vm.lastSelected = sampleItems[5]
 
       wrapper.vm.setSelectedItemsFromLastSelected(sampleItems[2])
+      expect(wrapper.vm.selectedItems).toEqual([sampleItems[5], sampleItems[2], sampleItems[3], sampleItems[4]])
 
-      expect(wrapper.vm.selectedItems).toEqual([sampleItems[2], sampleItems[3], sampleItems[4], sampleItems[5]])
+      wrapper.vm.selectedItems = [sampleItems[2], sampleItems[4]]
+      wrapper.vm.lastSelected = sampleItems[4]
+
+      wrapper.vm.setSelectedItemsFromLastSelected(sampleItems[6])
+      expect(wrapper.vm.selectedItems).toEqual([sampleItems[2], sampleItems[4], sampleItems[5], sampleItems[6]])
     })
   })
 
@@ -199,7 +204,7 @@ describe("VueMulticlick", () => {
       const $event = { metaKey: true, shiftKey: true }
       const appendSpy = jest.spyOn(wrapper.vm, "appendToSelection")
 
-      wrapper.vm.setSelectedItems = jest.fn()
+      wrapper.vm.setSelectedItemsFromLastSelected = jest.fn()
       wrapper.vm.setSelectedItem = jest.fn()
 
       wrapper.vm.itemClicked(sampleItems[1], $event)
