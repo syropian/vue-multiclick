@@ -58,7 +58,7 @@ const VueMulticlick = {
       } else {
         itemsToSelect = this.getItemsFromRange(this.lastSelectedIndex, itemIndex)
       }
-      this.setSelectedItems(itemsToSelect)
+      itemsToSelect.forEach(i => this.appendToSelection(i))
     },
     getItemsFromRange(start = 0, end = 0) {
       const items = []
@@ -82,7 +82,7 @@ const VueMulticlick = {
       })
     },
     itemSelected(item) {
-      return this.selectedItems.map(i => i[this.uid]).includes(item[this.uid])
+      return this.selectedItems.some(i => i[this.uid] === item[this.uid])
     },
     selectAll() {
       this.selectedItems = this.items
