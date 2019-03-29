@@ -1,18 +1,23 @@
 <template>
   <div class="container">
+    <div>
+      Number of items selected: {{ numSelected }}
+    </div>
+
     <VueMulticlick
       :items="items"
       uid="id"
+      @selected="selectedItems=$event"
       v-slot="{
-        selectedItems: selected,
-        itemClicked
+        itemClicked,
+        itemSelected
       }"
     >
       <ul>
         <li
           v-for="item in items"
           :key="item.name"
-          :class="{ selected: selected.includes(item) }"
+          :class="{ selected: itemSelected(item) }"
           @click="itemClicked(item, $event)"
         >
           {{ item.name }}
@@ -29,6 +34,7 @@ export default {
   },
   data() {
     return {
+      selectedItems: [],
       items: [
         { name: "A", id: 1 },
         { name: "B", id: 2 },
@@ -42,6 +48,11 @@ export default {
         { name: "J", id: 10 }
       ]
     };
+  },
+  computed: {
+    numSelected() {
+      return this.selectedItems.length
+    }
   }
 };
 </script>
