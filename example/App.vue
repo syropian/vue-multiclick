@@ -2,22 +2,23 @@
   <div class="container">
     <div>
       Number of items selected: {{ numSelected }}
+      <br /><br />
     </div>
 
     <VueMulticlick
       :items="items"
       uid="id"
-      @selected="selectedItems=$event"
+      @selected="selectedItems = $event"
       v-slot="{
         itemClicked,
-        itemSelected
+        itemIsSelected
       }"
     >
       <ul>
         <li
           v-for="item in items"
           :key="item.name"
-          :class="{ selected: itemSelected(item) }"
+          :class="{ selected: itemIsSelected(item) }"
           @click="itemClicked(item, $event)"
         >
           {{ item.name }}

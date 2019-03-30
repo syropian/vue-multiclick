@@ -30,13 +30,13 @@ const VueMulticlick = {
   },
   watch: {
     selectedItems() {
-      this.$emit('selected', this.selectedItems)
+      this.$emit("selected", this.selectedItems)
     }
   },
   methods: {
     itemClicked(item, $event = {}) {
       if (($event.metaKey || $event.ctrlKey) && !$event.shiftKey) {
-        if (this.itemSelected(item)) {
+        if (this.itemIsSelected(item)) {
           this.removeFromSelection(item)
         } else {
           this.appendToSelection(item)
@@ -69,6 +69,7 @@ const VueMulticlick = {
       const items = []
       const low = Math.min(start, end)
       const high = Math.max(start, end)
+
       for (let i = low; i <= high; i++) {
         items.push(this.items[i])
       }
@@ -87,6 +88,12 @@ const VueMulticlick = {
       })
     },
     itemSelected(item) {
+      console.warn(
+        'The "itemSelected" method is deprecated in favour of "itemIsSelected" and will be removed in a future version.'
+      )
+      return this.itemIsSelected(item)
+    },
+    itemIsSelected(item) {
       return this.selectedItems.some(i => i[this.uid] === item[this.uid])
     },
     selectAll() {
@@ -110,7 +117,8 @@ const VueMulticlick = {
       removeFromSelection: this.removeFromSelection,
       getItemIndex: this.getItemIndex,
       getItemsFromRange: this.getItemsFromRange,
-      itemSelected: this.itemSelected,
+      itemSelected: this.itemIsSelected,
+      itemIsSelected: this.itemIsSelected,
       selectAll: this.selectAll,
       selectNone: this.selectNone
     })

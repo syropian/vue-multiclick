@@ -45,7 +45,16 @@ var VueMulticlick = {
       });
     },
     lastSelectedIndex: function lastSelectedIndex() {
-      return this.getSelectedItemIndex(this.lastSelected);
+      if (!this.lastSelected) {
+        return -1;
+      } else {
+        return this.getItemIndex(this.lastSelected);
+      }
+    }
+  },
+  watch: {
+    selectedItems: function selectedItems() {
+      this.$emit("selected", this.selectedItems);
     }
   },
   methods: {
@@ -53,13 +62,13 @@ var VueMulticlick = {
       var $event = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
       if (($event.metaKey || $event.ctrlKey) && !$event.shiftKey) {
-        if (this.itemIsDuplicate(item)) {
+        if (this.itemIsSelected(item)) {
           this.removeFromSelection(item);
         } else {
           this.appendToSelection(item);
         }
       } else if ($event.shiftKey) {
-        this.setSelectedItems(item);
+        this.setSelectedItemsFromLastSelected(item);
       } else {
         this.setSelectedItem(item);
       }
@@ -69,61 +78,91 @@ var VueMulticlick = {
     setSelectedItem: function setSelectedItem(item) {
       this.selectedItems = [item];
     },
-    setSelectedItems: function setSelectedItems(item) {
-      var itemIndex = this.getSelectedItemIndex(item);
+    setSelectedItems: function setSelectedItems(items) {
+      this.selectedItems = items;
+    },
+    setSelectedItemsFromLastSelected: function setSelectedItemsFromLastSelected(item) {
+      var _this2 = this;
+
+      var itemIndex = this.getItemIndex(item);
+      var itemsToSelect = [];
 
       if (!this.selectedItems.length) {
-        for (var i = 0; i <= itemIndex; i++) {
-          this.appendToSelection(this.items[i]);
-        }
+        itemsToSelect = this.getItemsFromRange(0, itemIndex);
       } else {
-        if (itemIndex >= this.lastSelectedIndex) {
-          for (var _i = this.lastSelectedIndex; _i <= itemIndex; _i++) {
-            this.appendToSelection(this.items[_i]);
-          }
-        } else {
-          for (var _i2 = itemIndex; _i2 <= this.lastSelectedIndex; _i2++) {
-            this.appendToSelection(this.items[_i2]);
-          }
-        }
+        itemsToSelect = this.getItemsFromRange(this.lastSelectedIndex, itemIndex);
       }
+
+      itemsToSelect.forEach(function (i) {
+        return _this2.appendToSelection(i);
+      });
+    },
+    getItemsFromRange: function getItemsFromRange() {
+      var start = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var end = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+      var items = [];
+      var low = Math.min(start, end);
+      var high = Math.max(start, end);
+
+      for (var i = low; i <= high; i++) {
+        items.push(this.items[i]);
+      }
+
+      return items;
     },
     appendToSelection: function appendToSelection(item) {
       this.selectedItems = _toConsumableArray(new Set(this.selectedItems.concat([item])));
     },
     removeFromSelection: function removeFromSelection(item) {
-      var _this2 = this;
-
-      this.selectedItems = this.selectedItems.filter(function (i) {
-        return i[_this2.uid] !== item[_this2.uid];
-      });
-    },
-    getSelectedItemIndex: function getSelectedItemIndex(item) {
       var _this3 = this;
 
-      return this.items.findIndex(function (i) {
-        return i[_this3.uid] === item[_this3.uid];
+      this.selectedItems = this.selectedItems.filter(function (i) {
+        return i[_this3.uid] !== item[_this3.uid];
       });
     },
-    itemIsDuplicate: function itemIsDuplicate(item) {
+    getItemIndex: function getItemIndex(item) {
       var _this4 = this;
 
-      return this.selectedItems.map(function (i) {
-        return i[_this4.uid];
-      }).includes(item[this.uid]);
+      return this.items.findIndex(function (i) {
+        return i[_this4.uid] === item[_this4.uid];
+      });
+    },
+    itemSelected: function itemSelected(item) {
+      console.warn('The "itemSelected" method is deprecated in favour of "itemIsSelected" and will be removed in a future version.');
+      return this.itemIsSelected(item);
+    },
+    itemIsSelected: function itemIsSelected(item) {
+      var _this5 = this;
+
+      return this.selectedItems.some(function (i) {
+        return i[_this5.uid] === item[_this5.uid];
+      });
     },
     selectAll: function selectAll() {
       this.selectedItems = this.items;
     },
-    deselectAll: function deselectAll() {
+    selectNone: function selectNone() {
       this.selectedItems = [];
     }
   },
   render: function render() {
     return this.$scopedSlots.default({
       selectedItems: this.selectedItems,
+      lastSelectedItem: this.lastSelected,
       selectedIndexes: this.selectedIndexes,
-      itemClicked: this.itemClicked
+      lastSelectedIndex: this.lastSelectedIndex,
+      itemClicked: this.itemClicked,
+      setSelectedItem: this.setSelectedItem,
+      setSelectedItems: this.setSelectedItems,
+      setSelectedItemsFromLastSelected: this.setSelectedItemsFromLastSelected,
+      appendToSelection: this.appendToSelection,
+      removeFromSelection: this.removeFromSelection,
+      getItemIndex: this.getItemIndex,
+      getItemsFromRange: this.getItemsFromRange,
+      itemSelected: this.itemIsSelected,
+      itemIsSelected: this.itemIsSelected,
+      selectAll: this.selectAll,
+      selectNone: this.selectNone
     });
   }
 };

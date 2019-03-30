@@ -59,13 +59,13 @@ The easiest way to set item selection states is through the `itemClicked` method
 
 ## Retrieving selection states
 
-Of course just setting selection states is often not enough, and you'll want to visually change elements that are currently selected. You can use the `itemSelected` function to check if a given item is currently selected.
+Of course just setting selection states is often not enough, and you'll want to visually change elements that are currently selected. You can use the `itemIsSelected` function to check if a given item is currently selected.
 
 ```html
 <div>
-  <VueMulticlick :items="items" uid="id" v-slot="{ itemClicked, itemSelected }">
+  <VueMulticlick :items="items" uid="id" v-slot="{ itemClicked, itemIsSelected }">
     <ul>
-      <li v-for="item in items" :key="item.id" :class="{ 'is-selected': itemSelected(item) }" @click="itemClicked">
+      <li v-for="item in items" :key="item.id" :class="{ 'is-selected': itemIsSelected(item) }" @click="itemClicked">
         {{ item.name }}
       </li>
     </ul>
@@ -98,7 +98,7 @@ Of course just setting selection states is often not enough, and you'll want to 
 | `appendToSelection`                | Pushes an item to the selection list                                 | **item**: Object                              | null        |
 | `removeFromSelection`              | Removes an item from the selection list.                             | **item**: Object                              | null        |
 | `getItemIndex`                     | Returns the index of a given item                                    | **item**: Object                              | Number      |
-| `itemSelected`                     | Returns whether the given item is currently selected or not.         | **item**: Object                              | Boolean     |
+| `itemIsSelected`                     | Returns whether the given item is currently selected or not.         | **item**: Object                              | Boolean     |
 | `selectAll`                        | Pushes all items to the selection list.                              | N/A                                           | null        |
 | `selectNone`                       | Removes all items from the selection list.                           | N/A                                           | null        |
 | `getItemsFromRange`                | Retrieves all items between a given range.                           | **start**: Number<br />**end**: Number<br />  | Array       |

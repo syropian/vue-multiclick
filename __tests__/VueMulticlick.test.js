@@ -135,8 +135,8 @@ describe("VueMulticlick", () => {
     const dupe = sampleItems[4]
     const notDupe = sampleItems[5]
 
-    expect(wrapper.vm.itemSelected(dupe)).toBeTruthy()
-    expect(wrapper.vm.itemSelected(notDupe)).toBeFalsy()
+    expect(wrapper.vm.itemIsSelected(dupe)).toBeTruthy()
+    expect(wrapper.vm.itemIsSelected(notDupe)).toBeFalsy()
   })
 
   it("can select all items", () => {
