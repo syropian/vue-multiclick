@@ -28,6 +28,11 @@ const VueMulticlick = {
       }
     }
   },
+  watch: {
+    selectedItems() {
+      this.$emit('selected', this.selectedItems)
+    }
+  },
   methods: {
     itemClicked(item, $event = {}) {
       if (($event.metaKey || $event.ctrlKey) && !$event.shiftKey) {

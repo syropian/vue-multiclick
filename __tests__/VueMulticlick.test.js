@@ -250,4 +250,12 @@ describe("VueMulticlick", () => {
       expect(wrapper.vm.lastSelectedIndex).toBe(6)
     })
   })
+
+  describe("Event selected", () => {
+    it("emits when item is selected", () => {
+      wrapper.vm.itemClicked(sampleItems[4])
+
+      expect(wrapper.emitted().selected[0][0]).toEqual([sampleItems[4]])
+    })
+  })
 })
