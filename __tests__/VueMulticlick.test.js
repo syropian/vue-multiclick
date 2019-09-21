@@ -1,5 +1,5 @@
-import { shallowMount } from "@vue/test-utils"
-import VueMulticlick from "../src"
+const { shallowMount } = require("@vue/test-utils")
+const VueMulticlick = require("../src").default
 
 describe("VueMulticlick", () => {
   let sampleItems = [
@@ -253,7 +253,12 @@ describe("VueMulticlick", () => {
 
   describe("Event selected", () => {
     it("emits when item is selected", () => {
-      wrapper.vm.itemClicked(sampleItems[4])
+      const fakeEvent = {
+        metaKey: null,
+        ctrlKey: null,
+        shiftKey: null
+      }
+      wrapper.vm.itemClicked(sampleItems[4], fakeEvent)
 
       expect(wrapper.emitted().selected[0][0]).toEqual([sampleItems[4]])
     })

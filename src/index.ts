@@ -1,4 +1,7 @@
-const VueMulticlick = {
+import Vue from "vue"
+import { VNode } from "vue/types/vnode"
+
+const VueMulticlick = Vue.extend({
   name: "vue-multiclick",
   props: {
     items: {
@@ -12,15 +15,15 @@ const VueMulticlick = {
   },
   data() {
     return {
-      selectedItems: [],
-      lastSelected: null
+      selectedItems: [] as any,
+      lastSelected: null as any
     }
   },
   computed: {
-    selectedIndexes() {
-      return this.selectedItems.map(item => this.items.indexOf(item))
+    selectedIndexes(): Array<any> {
+      return this.selectedItems.map((item: any) => this.items.indexOf(item))
     },
-    lastSelectedIndex() {
+    lastSelectedIndex(): number {
       if (!this.lastSelected) {
         return -1
       } else {
@@ -34,7 +37,7 @@ const VueMulticlick = {
     }
   },
   methods: {
-    itemClicked(item, $event = {}) {
+    itemClicked(item: any, $event: KeyboardEvent) {
       if (($event.metaKey || $event.ctrlKey) && !$event.shiftKey) {
         if (this.itemIsSelected(item)) {
           this.removeFromSelection(item)
@@ -48,13 +51,13 @@ const VueMulticlick = {
       }
       this.lastSelected = item
     },
-    setSelectedItem(item) {
+    setSelectedItem(item: any) {
       this.selectedItems = [item]
     },
-    setSelectedItems(items) {
+    setSelectedItems(items: any) {
       this.selectedItems = items
     },
-    setSelectedItemsFromLastSelected(item) {
+    setSelectedItemsFromLastSelected(item: any) {
       const itemIndex = this.getItemIndex(item)
       let itemsToSelect = []
 
@@ -65,7 +68,7 @@ const VueMulticlick = {
       }
       itemsToSelect.forEach(i => this.appendToSelection(i))
     },
-    getItemsFromRange(start = 0, end = 0) {
+    getItemsFromRange(start: number = 0, end: number = 0): Array<any> {
       const items = []
       const low = Math.min(start, end)
       const high = Math.max(start, end)
@@ -76,25 +79,25 @@ const VueMulticlick = {
 
       return items
     },
-    appendToSelection(item) {
+    appendToSelection(item: any) {
       this.selectedItems = [...new Set(this.selectedItems.concat([item]))]
     },
-    removeFromSelection(item) {
-      this.selectedItems = this.selectedItems.filter(i => i[this.uid] !== item[this.uid])
+    removeFromSelection(item: any) {
+      this.selectedItems = this.selectedItems.filter((i: any) => i[this.uid] !== item[this.uid])
     },
-    getItemIndex(item) {
-      return this.items.findIndex(i => {
+    getItemIndex(item: any): number {
+      return this.items.findIndex((i: any) => {
         return i[this.uid] === item[this.uid]
       })
     },
-    itemSelected(item) {
+    itemSelected(item: any): boolean {
       console.warn(
         'The "itemSelected" method is deprecated in favour of "itemIsSelected" and will be removed in a future version.'
       )
       return this.itemIsSelected(item)
     },
-    itemIsSelected(item) {
-      return this.selectedItems.some(i => i[this.uid] === item[this.uid])
+    itemIsSelected(item: any): boolean {
+      return this.selectedItems.some((i: any) => i[this.uid] === item[this.uid])
     },
     selectAll() {
       this.selectedItems = this.items
@@ -103,30 +106,30 @@ const VueMulticlick = {
       this.selectedItems = []
     }
   },
-  render() {
-    return this.$scopedSlots.default({
-      selectedItems: this.selectedItems,
-      lastSelectedItem: this.lastSelected,
-      selectedIndexes: this.selectedIndexes,
-      lastSelectedIndex: this.lastSelectedIndex,
-      itemClicked: this.itemClicked,
-      setSelectedItem: this.setSelectedItem,
-      setSelectedItems: this.setSelectedItems,
-      setSelectedItemsFromLastSelected: this.setSelectedItemsFromLastSelected,
-      appendToSelection: this.appendToSelection,
-      removeFromSelection: this.removeFromSelection,
-      getItemIndex: this.getItemIndex,
-      getItemsFromRange: this.getItemsFromRange,
-      itemSelected: this.itemIsSelected,
-      itemIsSelected: this.itemIsSelected,
-      selectAll: this.selectAll,
-      selectNone: this.selectNone
-    })
-  }
-}
+  render(h): VNode {
+    const $children =
+      this.$scopedSlots.default &&
+      this.$scopedSlots.default({
+        selectedItems: this.selectedItems,
+        lastSelectedItem: this.lastSelected,
+        selectedIndexes: this.selectedIndexes,
+        lastSelectedIndex: this.lastSelectedIndex,
+        itemClicked: this.itemClicked,
+        setSelectedItem: this.setSelectedItem,
+        setSelectedItems: this.setSelectedItems,
+        setSelectedItemsFromLastSelected: this.setSelectedItemsFromLastSelected,
+        appendToSelection: this.appendToSelection,
+        removeFromSelection: this.removeFromSelection,
+        getItemIndex: this.getItemIndex,
+        getItemsFromRange: this.getItemsFromRange,
+        itemSelected: this.itemIsSelected,
+        itemIsSelected: this.itemIsSelected,
+        selectAll: this.selectAll,
+        selectNone: this.selectNone
+      })
 
-if (typeof window !== "undefined" && window.Vue) {
-  window.Vue.component(VueMulticlick.name, VueMulticlick)
-}
+    return h("div", $children)
+  }
+})
 
 export default VueMulticlick

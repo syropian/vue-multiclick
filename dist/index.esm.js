@@ -1,24 +1,7 @@
-function _toConsumableArray(arr) {
-  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-}
+import { __spread } from 'tslib';
+import Vue from 'vue';
 
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
-}
-
-function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-}
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
-}
-
-var VueMulticlick = {
+var VueMulticlick = Vue.extend({
   name: "vue-multiclick",
   props: {
     items: {
@@ -58,9 +41,7 @@ var VueMulticlick = {
     }
   },
   methods: {
-    itemClicked: function itemClicked(item) {
-      var $event = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+    itemClicked: function itemClicked(item, $event) {
       if (($event.metaKey || $event.ctrlKey) && !$event.shiftKey) {
         if (this.itemIsSelected(item)) {
           this.removeFromSelection(item);
@@ -82,7 +63,7 @@ var VueMulticlick = {
       this.selectedItems = items;
     },
     setSelectedItemsFromLastSelected: function setSelectedItemsFromLastSelected(item) {
-      var _this2 = this;
+      var _this = this;
 
       var itemIndex = this.getItemIndex(item);
       var itemsToSelect = [];
@@ -94,12 +75,18 @@ var VueMulticlick = {
       }
 
       itemsToSelect.forEach(function (i) {
-        return _this2.appendToSelection(i);
+        return _this.appendToSelection(i);
       });
     },
-    getItemsFromRange: function getItemsFromRange() {
-      var start = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      var end = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    getItemsFromRange: function getItemsFromRange(start, end) {
+      if (start === void 0) {
+        start = 0;
+      }
+
+      if (end === void 0) {
+        end = 0;
+      }
+
       var items = [];
       var low = Math.min(start, end);
       var high = Math.max(start, end);
@@ -111,20 +98,20 @@ var VueMulticlick = {
       return items;
     },
     appendToSelection: function appendToSelection(item) {
-      this.selectedItems = _toConsumableArray(new Set(this.selectedItems.concat([item])));
+      this.selectedItems = __spread(new Set(this.selectedItems.concat([item])));
     },
     removeFromSelection: function removeFromSelection(item) {
-      var _this3 = this;
+      var _this = this;
 
       this.selectedItems = this.selectedItems.filter(function (i) {
-        return i[_this3.uid] !== item[_this3.uid];
+        return i[_this.uid] !== item[_this.uid];
       });
     },
     getItemIndex: function getItemIndex(item) {
-      var _this4 = this;
+      var _this = this;
 
       return this.items.findIndex(function (i) {
-        return i[_this4.uid] === item[_this4.uid];
+        return i[_this.uid] === item[_this.uid];
       });
     },
     itemSelected: function itemSelected(item) {
@@ -132,10 +119,10 @@ var VueMulticlick = {
       return this.itemIsSelected(item);
     },
     itemIsSelected: function itemIsSelected(item) {
-      var _this5 = this;
+      var _this = this;
 
       return this.selectedItems.some(function (i) {
-        return i[_this5.uid] === item[_this5.uid];
+        return i[_this.uid] === item[_this.uid];
       });
     },
     selectAll: function selectAll() {
@@ -145,8 +132,8 @@ var VueMulticlick = {
       this.selectedItems = [];
     }
   },
-  render: function render() {
-    return this.$scopedSlots.default({
+  render: function render(h) {
+    var $children = this.$scopedSlots["default"] && this.$scopedSlots["default"]({
       selectedItems: this.selectedItems,
       lastSelectedItem: this.lastSelected,
       selectedIndexes: this.selectedIndexes,
@@ -164,11 +151,8 @@ var VueMulticlick = {
       selectAll: this.selectAll,
       selectNone: this.selectNone
     });
+    return h("div", $children);
   }
-};
-
-if (typeof window !== "undefined" && window.Vue) {
-  window.Vue.component(VueMulticlick.name, VueMulticlick);
-}
+});
 
 export default VueMulticlick;

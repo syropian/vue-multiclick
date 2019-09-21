@@ -1,5 +1,9 @@
 <template>
   <div class="container">
+    <h3>Vue-Multiclick</h3>
+    <p>Click an item to select it.</p>
+    <p>Hold shift to select a range of items.</p>
+    <p>Hold cmd on a Mac, or ctrl on Windows to select multiple individual items.</p>
     <div>
       Number of items selected: {{ numSelected }}
       <br /><br />
@@ -11,9 +15,14 @@
       @selected="selectedItems = $event"
       v-slot="{
         itemClicked,
-        itemIsSelected
+        itemIsSelected,
+        selectAll,
+        selectNone
       }"
     >
+      <button @click="selectAll">Select All</button>
+      <button @click="selectNone">Select None</button>
+      <br /><br />
       <ul>
         <li
           v-for="item in items"
@@ -28,7 +37,7 @@
   </div>
 </template>
 <script>
-import VueMulticlick from "../src";
+import VueMulticlick from "../dist";
 export default {
   components: {
     VueMulticlick
@@ -52,7 +61,7 @@ export default {
   },
   computed: {
     numSelected() {
-      return this.selectedItems.length
+      return this.selectedItems.length;
     }
   }
 };

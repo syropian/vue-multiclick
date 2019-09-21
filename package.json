@@ -2,12 +2,13 @@
   "name": "vue-multiclick",
   "version": "1.1.0",
   "description": "A renderless Vue component for managing list item selection state",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.min.js",
+  "module": "dist/index.esm.min.js",
   "unpkg": "dist/index.umd.min.js",
   "files": [
     "dist"
   ],
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "bili",
     "test": "jest",
@@ -27,12 +28,15 @@
   "license": "MIT",
   "repository": "https://github.com/syropian/vue-multiclick",
   "bili": {
+    "input": "src/index.ts",
     "output": {
       "format": [
         "cjs",
+        "es",
         "umd",
-        "umd-min",
-        "es"
+        "cjs-min",
+        "es-min",
+        "umd-min"
       ],
       "moduleName": "VueMulticlick"
     }
@@ -45,15 +49,16 @@
     }
   },
   "devDependencies": {
-    "@babel/core": "^7.3.4",
-    "@babel/preset-env": "^7.3.4",
+    "@types/jest": "^24.0.18",
     "@vue/test-utils": "^1.0.0-beta.29",
-    "babel-jest": "^24.1.0",
-    "bili": "^4.5.2",
-    "gh-pages": "^2.0.1",
-    "jest": "^24.1.0",
-    "poi": "^12.5.5",
-    "vue": "^2.6.8",
-    "vue-template-compiler": "^2.6.8"
+    "bili": "^4.8.1",
+    "gh-pages": "^2.1.1",
+    "jest": "^24.9.0",
+    "poi": "^12.7.2",
+    "rollup-plugin-typescript2": "^0.24.2",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
   }
 }
