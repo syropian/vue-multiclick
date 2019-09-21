@@ -1,6 +1,6 @@
 # Vue-Multiclick
 
-[![Build Status](https://travis-ci.org/syropian/vue-multiclick.svg?branch=master)](https://travis-ci.org/syropian/vue-multiclick)
+[![Actions Status](https://github.com/syropian/vue-multiclick/workflows/Tests/badge.svg)](https://github.com/syropian/vue-multiclick/actions)
 
 > A renderless Vue component for managing list item selection state.
 
@@ -98,7 +98,7 @@ Of course just setting selection states is often not enough, and you'll want to 
 | `appendToSelection`                | Pushes an item to the selection list                                 | **item**: Object                              | null        |
 | `removeFromSelection`              | Removes an item from the selection list.                             | **item**: Object                              | null        |
 | `getItemIndex`                     | Returns the index of a given item                                    | **item**: Object                              | Number      |
-| `itemIsSelected`                     | Returns whether the given item is currently selected or not.         | **item**: Object                              | Boolean     |
+| `itemIsSelected`                   | Returns whether the given item is currently selected or not.         | **item**: Object                              | Boolean     |
 | `selectAll`                        | Pushes all items to the selection list.                              | N/A                                           | null        |
 | `selectNone`                       | Removes all items from the selection list.                           | N/A                                           | null        |
 | `getItemsFromRange`                | Retrieves all items between a given range.                           | **start**: Number<br />**end**: Number<br />  | Array       |
